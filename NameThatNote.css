@@ -54,6 +54,7 @@ body{
 .row.left{
     height: 20vh;
     padding-left: 9vw;
+    gap: 10px;
 }
 
 .row.left.bass{

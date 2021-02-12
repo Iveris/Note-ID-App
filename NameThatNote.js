@@ -2,12 +2,12 @@ const YELLOW = '#FDE74C';
 
 ////////// SELECT STRINGS TO TEST //////////
 const strings = document.querySelectorAll('.row.left svg');
-let checkedStrings = 0;
+let checkedStringsCount = 0;
 
-// add boolean value for inclusion to each string
+
 for (string of strings) {
     let temp = null;
-    string.createAttribute = 'checked';
+    string.createAttribute = 'checked'; // add boolean value for inclusion to each string
     string.checked = false;
     string.addEventListener('click', (Event) => {
         temp = Event.target.parentElement;
@@ -20,12 +20,12 @@ function check(string) {
     if (string.checked == true) {
         string.checked = false;
         string.style.fill = 'black';
-        checkedStrings -= 1;
+        checkedStringsCount -= 1;
     }
     else {
         string.checked = true;
         string.style.fill = YELLOW;
-        checkedStrings += 1;
+        checkedStringsCount += 1;
     }
 }
 
@@ -33,7 +33,7 @@ const playBtn = document.querySelector('.playBtn');
 playBtn.addEventListener('click', playGame);
 
 function playGame() {
-    if (checkedStrings > 0) {
+    if (checkedStringsCount > 0) {
         loadGame();
     }
 }
@@ -51,38 +51,31 @@ const notesByString = [
     ['E3', 'F3', 'G3']
 ];
 
-// Load Images
-
-let notes = []; // array to hold images to be tested
+let noteImgs = [];
 function createNoteArray() {
     for (let i = 0; i < 6; i++) {
         if (strings[i].checked === true) {
-            loadNotes(strings[i].id - 1);
+            loadNoteImgs(strings[i].id - 1);
         }
     }
 }
 
-// creates an array of image file urls, and contains the note name representing those images
-// the note name is always at index 0
-// after each array is created it is pushed to the notes array
-function loadNotes(string) {
+function loadNoteImgs(string) {
     for (let j = 0; j < notesByString[string].length; j++) {
         let temp = [];
-        temp.push(notesByString[string][j]);
+        temp.push(notesByString[string][j]); // the note name is always at index 0
         temp.push(`img/noteSVGs/${notesByString[string][j]}_Quarter_Note.svg`)
         temp.push(`img/noteSVGs/${notesByString[string][j]}_Half_Note.svg`)
         temp.push(`img/noteSVGs/${notesByString[string][j]}_Whole_Note.svg`)
 
-        notes.push(temp);
+        noteImgs.push(temp);
     }
 }
 
-// set up game controls, constants, and variables
 const displayedImage = document.querySelector('#staff');
 let letterName; // holds the answer to the note being tested
 let score = 0;
 
-// set event listeners
 const controls = document.querySelectorAll('div.row.controls img');
 for (let button of controls) {
     button.addEventListener('click', (Event) => {
@@ -91,8 +84,8 @@ for (let button of controls) {
     })
 }
 
-function eval(studentA) {
-    if (studentA == letterName.charAt(0)) {
+function eval(studentResponse) {
+    if (studentResponse == letterName.charAt(0)) {
         score += 10;
         nextNote();
         updateScore();
@@ -105,7 +98,6 @@ function eval(studentA) {
     }
 }
 
-// load game
 function loadGame() {
     let settingsPage = document.querySelector('.settings');
     let gamePage = document.querySelector('.game');
@@ -131,24 +123,8 @@ const cntrLetters = document.querySelectorAll('div.row.controls span');
 function nextNote() {
     letterName = "";
     displayedImage.src = '';
-    let indx = Math.floor(Math.random() * notes.length);
-    let image = Math.floor(Math.random() * (notes[indx].length - 1)) + 1;
-    letterName = notes[indx][0];
-    displayedImage.src = notes[indx][image];
+    let indx = Math.floor(Math.random() * noteImgs.length);
+    let image = Math.floor(Math.random() * (noteImgs[indx].length - 1)) + 1;
+    letterName = noteImgs[indx][0];
+    displayedImage.src = noteImgs[indx][image];
 }
-
-// function playAnimation() {
-//     let animation = null;
-//     switch (score) {
-//         case 200: animation = upperCut;
-//             break;
-//         case 100:
-//             animation = punch;
-//             break;
-//         case 50:
-//             animation = kick;
-//             break;
-//     }
-
-//     playAni(animation);
-// }
