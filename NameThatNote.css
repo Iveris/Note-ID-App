@@ -9,7 +9,6 @@ body
     background-image: url("img/chalkboard.png");
     background-attachment: fixed;
     font-family: 'Walter Turncoat', cursive;
-    font-size: 2.5em;
     color: rgb(239, 229, 216);
 }
 
@@ -18,7 +17,7 @@ div.settings{
     grid-template-rows: 20vh auto 20vh;
     grid-template-columns: repeat(7, 1fr);
     grid-template-areas:
-        "four five six . instructions instructions instructions"
+        "four five six . . . ."
         "headstock headstock headstock headstock instructions instructions instructions"
         "one two three . . playButton .";
 }
@@ -81,11 +80,18 @@ div.settings{
 .instructions{
     grid-area: instructions;
     
-    margin-top: 5vh;
+    margin:auto;
+    padding-right: 1em;
     display: flex;
     flex-direction: column;
     align-content: flex-end;
     justify-items: center;
+}
+
+.instructions img{
+    max-width: 100%;
+    min-width: 90%;
+    height: auto;
 }
 
 .headstock{
@@ -133,7 +139,7 @@ div.game
     grid-template-rows: 20vh 60vh 20vh;
     grid-template-columns: repeat(7, 1fr);
     grid-template-areas: 
-        "display display display display . score score"
+        "display display display display score score score"
         "display display display display encouragement encouragement encouragement"
         "noteChoice noteChoice noteChoice noteChoice noteChoice noteChoice noteChoice";
 }
@@ -155,6 +161,7 @@ div.game
     display:flex;
     justify-content: flex-start;
     align-items: center;
+    font-size: 2.5rem;
 }
 
 .encouragement
@@ -169,14 +176,14 @@ div.game
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    gap: 0.3em;
+    gap: 0.3rem;
 }
 
 .noteChoice img
 {
     width: 9vw;
     height: auto;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .noteChoice img:hover

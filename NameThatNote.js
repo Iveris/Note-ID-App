@@ -124,6 +124,7 @@ function decrementScore() {
 const displayedScore = document.querySelector(".score");
 function updateScore() { displayedScore.innerHTML = `SCORE: ${score}`; }
 
+
 const encourageDiv = document.querySelector(".encouragement");
 const encouragements = ["Great Job", "Good Job", "Nice Going", "Keep it up", "Don't Stop Now"];
 
@@ -157,5 +158,4 @@ function createEncouragement(num) {
             break;
     }
     return `${num} in a row!\n${encouragement}!`;
-    // return `${num} in a row!\nYOU BROKE\nTHE GAME!!`;
 }
