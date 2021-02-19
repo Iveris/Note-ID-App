@@ -1,130 +1,161 @@
-const YELLOW = '#FDE74C';
+// SETTINGS
+const strings = document.querySelectorAll(".string svg");
+const playButton = document.querySelector(".playButton button");
 
-////////// SELECT STRINGS TO TEST //////////
-const strings = document.querySelectorAll('.row.left svg');
-let checkedStringsCount = 0;
+playButton.addEventListener('click', startGame);
 
+let stringTestCount = 0;
 
 for (string of strings) {
-    let temp = null;
-    string.createAttribute = 'checked'; // add boolean value for inclusion to each string
-    string.checked = false;
-    string.addEventListener('click', (Event) => {
-        temp = Event.target.parentElement;
-        check(temp);
+    string.setAttribute("selected", false);
+    string.addEventListener('click', function (Event) {
+        select(Event.target.parentElement);
+    })
+}
+
+function select(string) {
+    if (string.getAttribute("selected") == "false") {
+        string.setAttribute("selected", true);
+        string.style.fill = '#FDE74C';
+        stringTestCount += 1;
+        playButton.disabled = false;
+        return;
+    }
+    else if (string.getAttribute("selected") == "true") {
+        string.setAttribute("selected", false);
+        string.style.fill = 'black';
+        stringTestCount -= 1;
+        if (stringTestCount == 0) playButton.disabled = true;
+        return;
+    }
+}
+
+const settings = document.querySelector(".settings");
+const game = document.querySelector(".game");
+
+// LOAD GAME
+
+const choices = document.querySelectorAll(".noteChoice img");
+for (choice of choices) {
+    choice.addEventListener('click', function (event) {
+        isCorrect(event.target.id[0]);
     });
 }
 
-// change value and color based on click
-function check(string) {
-    if (string.checked == true) {
-        string.checked = false;
-        string.style.fill = 'black';
-        checkedStringsCount -= 1;
-    }
-    else {
-        string.checked = true;
-        string.style.fill = YELLOW;
-        checkedStringsCount += 1;
-    }
-}
-
-const playBtn = document.querySelector('.playBtn');
-playBtn.addEventListener('click', playGame);
-
-function playGame() {
-    if (checkedStringsCount > 0) {
-        loadGame();
-    }
-}
-
-///////// GAME //////////
-
-// Array to hold IDs serving as partial file names for svg graphics
-// row = string # -1
-const notesByString = [
-    ['E5', 'F5', 'G5'],
+// letter name of notes on string i where notesByString[i] = string number - 1
+const notesByString =
+    [['E5', 'F5', 'G5'],
     ['B4', 'C5', 'D5'],
     ['G4', 'A4'],
     ['D4', 'E4', 'F4'],
     ['A3', 'B3', 'C4'],
-    ['E3', 'F3', 'G3']
-];
+    ['E3', 'F3', 'G3']];
 
 let noteImgs = [];
-function createNoteArray() {
-    for (let i = 0; i < 6; i++) {
-        if (strings[i].checked === true) {
-            loadNoteImgs(strings[i].id - 1);
+
+function startGame() {
+    settings.style.display = "none";
+    game.style.display = "grid";
+    getSelectedStrings();
+    displayNextNote();
+};
+
+function getSelectedStrings() {
+    for (string of strings) {
+        if (string.getAttribute("selected") == "true") {
+            loadImgs(notesByString[string.id - 1]);
         }
     }
-}
+};
 
-function loadNoteImgs(string) {
-    for (let j = 0; j < notesByString[string].length; j++) {
-        let temp = [];
-        temp.push(notesByString[string][j]); // the note name is always at index 0
-        temp.push(`img/noteSVGs/${notesByString[string][j]}_Quarter_Note.svg`)
-        temp.push(`img/noteSVGs/${notesByString[string][j]}_Half_Note.svg`)
-        temp.push(`img/noteSVGs/${notesByString[string][j]}_Whole_Note.svg`)
+function loadImgs(arrayOfNotes) {
+    for (let i = 0; i < arrayOfNotes.length; i++) {
+        let tempArray = [];
+        note = arrayOfNotes[i];
+        tempArray.push(`${note}`)
+        tempArray.push(`img/NoteSVGs/${note}_Quarter_Note.svg`);
+        tempArray.push(`img/NoteSVGs/${note}_Half_Note.svg`);
+        tempArray.push(`img/NoteSVGs/${note}_Whole_Note.svg`);
+        noteImgs.push(tempArray);
+    };
+};
 
-        noteImgs.push(temp);
-    }
-}
+function randIndex(limit) { return Math.floor(Math.random() * limit); };
 
-const displayedImage = document.querySelector('#staff');
-let letterName; // holds the answer to the note being tested
-let score = 0;
-
-const controls = document.querySelectorAll('div.row.controls img');
-for (let button of controls) {
-    button.addEventListener('click', (Event) => {
-        let studentAnswer = Event.target.attributes[2].textContent;
-        eval(studentAnswer)
-    })
-}
-
-function eval(studentResponse) {
-    if (studentResponse == letterName.charAt(0)) {
-        score += 10;
-        nextNote();
-        updateScore();
+// PLAY GAME
+answer = "";
+function isCorrect(str) {
+    if (str == answer[0]) {
+        incrementScore();
+        displayNextNote();
     }
     else {
-        if (!score == 0) {
-            score -= 10;
-            updateScore();
-        }
+        decrementScore();
     }
 }
 
-function loadGame() {
-    let settingsPage = document.querySelector('.settings');
-    let gamePage = document.querySelector('.game');
-    createNoteArray();
-    settingsPage.style.display = 'none';
-    gamePage.style.display = 'flex';
-    nextNote();
+display = document.querySelector(".display img");
+
+
+function displayNextNote() {
+    string = randIndex(noteImgs.length);
+    note = randIndex(noteImgs[string].length - 1);
+    display.src = noteImgs[string][note + 1];
+    answer = noteImgs[string][0];
 }
 
-function updateScore() {
-    document.querySelector('#currentScore').innerText = score.toString();
-    if (score === 50 || score === 100 || score === 200) {
-        // playAnimation();
+let score = 0;
+let consecutiveAnswers = 0
+
+function incrementScore() {
+    score += 10;
+    updateScore();
+    giveEncouragement(++consecutiveAnswers);
+}
+
+function decrementScore() {
+    if (score >= 10) {
+        score -= 10;
+        updateScore();
+        consecutiveAnswers = 0;
     }
 }
 
-// start game loop
+const displayedScore = document.querySelector(".score");
+function updateScore() { displayedScore.innerHTML = `SCORE: ${score}`; }
 
-const colorArray = ['#03045E', '#FF66C4', '#0077B6', '#FDE74C', '#6DA6B0', '#FF7F11', '#B2EDEF'];
-const cntrLetters = document.querySelectorAll('div.row.controls span');
+const encourageDiv = document.querySelector(".encouragement");
+const encouragements = ["Great Job", "Good Job", "Nice Going", "Keep it up", "Don't Stop Now"];
 
+function giveEncouragement(num) {
+    if (num == 5 || num == 10 || num == 20 || num == 50 || num == 100) {
+        let encouragement = createEncouragement(num);
+        encourageDiv.innerText = encouragement;
+        let clearEDiv = setTimeout(function () {
+            encourageDiv.innerText = "";
+        }, 5000);
+    }
+}
 
-function nextNote() {
-    letterName = "";
-    displayedImage.src = '';
-    let indx = Math.floor(Math.random() * noteImgs.length);
-    let image = Math.floor(Math.random() * (noteImgs[indx].length - 1)) + 1;
-    letterName = noteImgs[indx][0];
-    displayedImage.src = noteImgs[indx][image];
+function createEncouragement(num) {
+    let encouragement = "";
+    switch (num) {
+        case 5:
+            encouragement = encouragements[randIndex(encouragements.length)];
+            break;
+        case 10:
+            encouragement = encouragements[randIndex(encouragements.length)];
+            break;
+        case 20:
+            encouragement = "You're on FIRE";
+            break;
+        case 50:
+            encouragement = "Careful! Don't break the game";
+            break;
+        case 100:
+            encouragement = "YOU WIN!!!\nYOU BROKE THE GAME!!";
+            break;
+    }
+    return `${num} in a row!\n${encouragement}!`;
+    // return `${num} in a row!\nYOU BROKE\nTHE GAME!!`;
 }

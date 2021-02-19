@@ -1,82 +1,107 @@
-*{
-    margin: 0px;
-    padding: 0px;
-}
-
-body{
-    background-image: url("img/WoodFloor.jpg");
-    background-attachment: fixed;
-}
-/*    SETTINGS    */
-.row{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap-reverse;
-    justify-items: center;
-    align-items: center;
-    width: 100vw;
-    height: 90vh;
-}
-
-.col{
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    align-content: center;
-    justify-items: center;
-}
-
-.col.strings{
-    flex-direction: row;
-    justify-content: flex-start;
-    width: 50%
-}
-
-.col.strings svg{
-    width: 10vw;
-    height: 10vw;
-    transition: fill 0.5s cubic-bezier(.44,1.55,.64,1);
-}
-
-.col.strings svg:hover{
-    fill: #FDE74C;
-}
-
-.col img{
-    width: 50vw;
-}
-
-.col.stringsIMG svg{
-    align-content: center;
-    width: 35vw;
-}
-
-.row.left{
-    height: 20vh;
-    padding-left: 9vw;
-    gap: 10px;
-}
-
-.row.left.bass{
-    align-items: baseline;
-}
-
-.row.left.treble{
-    align-items:flex-end;
-}
-
-.row.btn{
-    justify-content: center;
-    height: 4vh;
-}
-
-#headIMG{
-    justify-content: flex-start;
-    height: 100%;
+*
+{
+    margin: 0;
     padding: 0;
 }
 
-.playBtn {
+body
+{
+    background-image: url("img/chalkboard.png");
+    background-attachment: fixed;
+    font-family: 'Walter Turncoat', cursive;
+    font-size: 2.5em;
+    color: rgb(239, 229, 216);
+}
+
+div.settings{
+    display: grid;
+    grid-template-rows: 20vh auto 20vh;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-areas:
+        "four five six . instructions instructions instructions"
+        "headstock headstock headstock headstock instructions instructions instructions"
+        "one two three . . playButton .";
+}
+
+/* SETTINGS */
+
+.string svg
+{
+    fill: rgb(24, 24, 24);
+}
+
+.string svg:hover
+{
+    fill: #FDE74C;
+    transform: scale(110%);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.bass{
+    margin-left: 5vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items:flex-end;
+}
+
+.treble{
+    margin-left: 5vw;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items:flex-start;
+}
+
+.six{
+    grid-area: six;
+}
+
+.five{
+    grid-area: five;
+}
+
+.four{
+    grid-area: four;
+}
+
+.three{
+    grid-area: three;
+}
+
+.two{
+    grid-area: two;
+}
+
+.one{
+    grid-area: one;
+}
+
+.instructions{
+    grid-area: instructions;
+    
+    margin-top: 5vh;
+    display: flex;
+    flex-direction: column;
+    align-content: flex-end;
+    justify-items: center;
+}
+
+.headstock{
+    grid-area: headstock;
+}
+
+.headstock img{
+    max-width: 50vw;
+    height: auto;
+}
+
+.playButton{
+    grid-area: playButton;
+}
+
+.playButton button{
     border: 2px solid #FDE74C;
     line-height: 2.5;
     padding: 0 20px;
@@ -86,77 +111,75 @@ body{
     color: #FDE74C;
     border-radius: 10px;
     background-color: transparent;
-    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.playBtn:hover {
+.playButton button:hover
+{
     background-color: #FDE74C;
-    color: whitesmoke;
+    color: darkgray;
+}
+.playButton button:disabled
+{
+    visibility: hidden;    
 }
 
-.settings{
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-}
+/* GAME */
 
-
-/* pink #ff66c4 */
-/* green #b2edef */
-
-/*    GAME    */
-
-.game{
+div.game
+{
     display: none;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    font-family: 'Bungee Shade', cursive;
-    font-size: 2rem;
-    color: whitesmoke;
+    overflow: auto;
+    grid-template-rows: 20vh 60vh 20vh;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-areas: 
+        "display display display display . score score"
+        "display display display display encouragement encouragement encouragement"
+        "noteChoice noteChoice noteChoice noteChoice noteChoice noteChoice noteChoice";
 }
 
-section.game div.row{
+.display
+{
+    grid-area: display;
+}
+
+.display img
+{
+    width: 85%;
+    object-fit: contain;
+}
+
+.score
+{
+    grid-area: score;
+    display:flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.encouragement
+{
+    grid-area: encouragement;
+}
+
+.noteChoice
+{
+    grid-area: noteChoice;
+    max-width: 100%;
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
     justify-content: space-evenly;
-    width: 100%;
+    align-items: center;
+    gap: 0.3em;
 }
 
-section.game div.row.header{
-    height: 30vh;
-    justify-content: center;
-    align-items: flex-start;
+.noteChoice img
+{
+    width: 9vw;
+    height: auto;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-div.row.header img{
-    min-width: 100%;
-}
-
-div.row.main{
-    height:40vh;
-    justify-items: center;
-    background-color: rgba(0, 0, 0, 0.2);
-}
-
-div.row.main img{
-    height: 100%;
-}
-
-
-
-div.row.controls{
-    height: 30vh;
-}
-
-div.row.controls img{
-    width: 10vw;
-    height: 10vw;
-    transition: width 0.2s, height 0.2s;
-}
-
-div.row.controls img:hover{
-    width: 15vw;
-    height: 15vw;
+.noteChoice img:hover
+{
+    transform: scale(110%);
 }
